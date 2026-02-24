@@ -70,27 +70,32 @@ blue_btn = Button(510, 30, 40, 40, "", on_button_click, blue)
 purple_btn = Button(560, 30, 40, 40, "", on_button_click, purple)
 pink_btn = Button(610, 30, 40, 40, "", on_button_click, pink)
 
+array = [black_btn, red_btn, orange_btn, yellow_btn, green_btn, blue_btn, purple_btn, pink_btn]
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            for button in array:
+                if button.rect.collidepoint(event.pos):
+                    current_color = button.color
+                    break
 
     mouse_pos = pygame.mouse.get_pos()
     mouse_click = pygame.mouse.get_pressed()
+    # [0] = left
+    # [1] = center
+    # [2] = right
 
     save_btn.update(mouse_pos, mouse_click)
     
     screen.fill((230, 230, 230))
     save_btn.draw(screen)
     clear_btn.draw(screen)
-    black_btn.draw(screen)
-    red_btn.draw(screen)
-    orange_btn.draw(screen)
-    yellow_btn.draw(screen)
-    green_btn.draw(screen)
-    blue_btn.draw(screen)
-    purple_btn.draw(screen)
-    pink_btn.draw(screen)
+
+    for button in array:
+        button.draw(screen)
 
     pygame.draw.line(screen, black, (width, 90), (0, 90))
     pygame.draw.rect(screen, white, editor)
