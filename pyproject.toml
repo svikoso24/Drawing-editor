@@ -1,1 +1,16 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
+[project]
+name = "drawing-editor"
+version = "0.1.0"
+description = "Simple drawing editor using pygame"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pygame-ce"
+]
+
+[project.scripts]
+drawing-editor = "src.main:main"
