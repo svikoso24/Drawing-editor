@@ -1,9 +1,8 @@
+import pygame
+# import tkinter as tk
+# import random
+
 def main():
-    import pygame
-    # import tkinter as tk
-    # import random
-
-
     pygame.init()
     pygame.font.init()
 
