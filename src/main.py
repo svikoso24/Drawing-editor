@@ -8,6 +8,10 @@ def main():
 
     font = pygame.font.SysFont('Consolas', 30)
 
+    zoom = 1.0
+    offset_x = 0
+    offset_y = 0
+
     width, height = 1280, 720
     screen = pygame.display.set_mode((width, height))
     clock = pygame.time.Clock()
@@ -109,7 +113,15 @@ def main():
                     # pygame.draw.line(editor, mouse_color, last_pos, event.pos, brush_size)
                     # z bodu (last_x, last_y) -- do bodu (x, y)
                     # x = vodorovný, y = svislý -- (100, 200) == 100 pixelů doprava, 200 pixelů dolů
-                    
+                elif pygame.mouse.get_pressed()[2]:
+                    offset_x += event.rel[0]
+                    offset_y += event.rel[1]
+            elif event.type == pygame.MOUSEWHEEL:
+                if event.y > 0:
+                    zoom += 0.1
+                else:
+                    zoom -= 0.1
+                zoom = max(0.2, min(zoom, 3)) #limit (0.2x až 3x)
 
         mouse_pos = pygame.mouse.get_pos()
         # [0] = left
@@ -124,7 +136,11 @@ def main():
             color.draw(screen)
             color.update(mouse_pos)
 
-        screen.blit(editor, (0, 91))
+        
+        scaled_width = int(1280*zoom)
+        scaled_height = int((height-91)*zoom)
+        scaled_editor = pygame.transform.scale(editor, (scaled_width, scaled_height))
+        screen.blit(scaled_editor, (offset_x, offset_y+91))
         
         pygame.display.update()
         clock.tick(20)
