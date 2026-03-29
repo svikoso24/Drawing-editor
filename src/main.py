@@ -104,10 +104,14 @@ def main():
                     last_pos = None
             elif event.type == pygame.MOUSEMOTION:
                 if drawing:
-                    x, y = event.pos
-                    last_x, last_y = last_pos
-                    y -= 91
-                    last_y -= 91
+                    mx, my = event.pos
+
+                    x = (mx - offset_x) / zoom
+                    y = (my - offset_y-91) / zoom
+
+                    last_x = (last_pos[0] - offset_x) / zoom
+                    last_y = (last_pos[1] - offset_y-91) / zoom
+                    
                     pygame.draw.line(editor, mouse_color, (last_x, last_y), (x, y), brush_size)
                     last_pos = event.pos
                     # pygame.draw.line(editor, mouse_color, last_pos, event.pos, brush_size)
@@ -117,9 +121,6 @@ def main():
                     offset_x += event.rel[0]
                     offset_y += event.rel[1]
                     # = o kolik se myš pohnula od posledního momentu (dx, dy)
-                    #predtim (100, 200)
-                    #ted (110, 195)
-                    #event.rel = (10, -5)
             elif event.type == pygame.MOUSEWHEEL:
                 if event.y > 0:
                     zoom += 0.1
