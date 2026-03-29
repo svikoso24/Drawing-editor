@@ -1,22 +1,16 @@
 # Drawing editor
 
-Projekt se zaměřuje na tvorbu jednoduchého kreslícího editoru.
-
 ## Popis projektu
 Cílem projektu je vytvořit grafickou aplikaci, která umožní uživateli
 kreslit čáry pomocí myši a v případě dostatku času také jednoduché tvary.
 Projekt bude postupně rozvíjen během školního roku.
-
 
 ## Plánované funkce
 - kreslení čar (a případně tvarů)
 - výběr barvy
 - mazání plátna
 - uložení obrázku
-
-## Použité technologie
-- Python
-- Pygame (možná Tkinter)
+- zoom
 
 ## Spuštění aplikace
 1. Nainstalujte Python (nejnovější verzi)
