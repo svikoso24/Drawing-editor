@@ -45,27 +45,19 @@ def main():
 
             surface.blit(surf_text, rect_text)
 
-        def update(self, mouse_pos, mouse_click):
-            if self.rect.collidepoint(mouse_pos):
-                if mouse_click[0] and not self.was_pressed:
-                    if self.callback:
-                        self.callback()
-                    self.was_pressed = True
-                else:
-                    self.was_pressed = False
-            else:
-                self.was_pressed = False
+        def update(self, mouse_pos):
+            return self.rect.collidepoint(mouse_pos)
         
 
     mouse_color = black
     def set_color(color):
-        global mouse_color 
+        nonlocal mouse_color 
         mouse_color = color
         # self.setOpacity(0.7)
     def clear():
         editor.fill((white))
     def save():
-        ...
+        pygame.image.save(editor, "drawing.png")
     save_btn = Button(30, 30, 100, 40, "Save", save)
     clear_btn = Button(140, 30, 100, 40, "Clear", clear)
     black_btn = Button(260, 30, 40, 40, "", lambda: set_color(black), black)
@@ -92,18 +84,14 @@ def main():
                     for button in buttons:
                         if button.rect.collidepoint(event.pos):
                             button.callback()
-                            clicked_button = True
                             break
-                    else:
-                        for color in colors:
-                            if color.rect.collidepoint(event.pos):
-                                color.callback()
-                                clicked_color = True
-                                break
-                        else:
-                            if editor_rect.collidepoint(event.pos):
-                                drawing = True
-                                last_pos = event.pos # kreslím od posledního bodu k aktuálnímu
+                    for color in colors:
+                        if color.rect.collidepoint(event.pos):
+                            color.callback()
+                            break
+                    if editor_rect.collidepoint(event.pos):
+                        drawing = True
+                        last_pos = event.pos # kreslím od posledního bodu k aktuálnímu
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     drawing = False
@@ -122,17 +110,18 @@ def main():
                     
 
         mouse_pos = pygame.mouse.get_pos()
-        mouse_click = pygame.mouse.get_pressed()
         # [0] = left
         # [1] = center
         # [2] = right
 
         screen.fill((100,100,100))
-        save_btn.update(mouse_pos, mouse_click)
+        save_btn.update(mouse_pos)
         for button in buttons:
             button.draw(screen)
+            button.update(mouse_pos)
         for color in colors:
             color.draw(screen)
+            color.update(mouse_pos)
 
         screen.blit(editor, (0, 91))
         
