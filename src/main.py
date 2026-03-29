@@ -58,6 +58,7 @@ def main():
         editor.fill((white))
     def save():
         pygame.image.save(editor, "drawing.png")
+        print("saved as drawing.png")
     save_btn = Button(30, 30, 100, 40, "Save", save)
     clear_btn = Button(140, 30, 100, 40, "Clear", clear)
     black_btn = Button(260, 30, 40, 40, "", lambda: set_color(black), black)
@@ -115,7 +116,6 @@ def main():
         # [2] = right
 
         screen.fill((100,100,100))
-        save_btn.update(mouse_pos)
         for button in buttons:
             button.draw(screen)
             button.update(mouse_pos)
