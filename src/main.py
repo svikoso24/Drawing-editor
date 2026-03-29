@@ -116,6 +116,10 @@ def main():
                 elif pygame.mouse.get_pressed()[2]:
                     offset_x += event.rel[0]
                     offset_y += event.rel[1]
+                    # = o kolik se myš pohnula od posledního momentu (dx, dy)
+                    #predtim (100, 200)
+                    #ted (110, 195)
+                    #event.rel = (10, -5)
             elif event.type == pygame.MOUSEWHEEL:
                 if event.y > 0:
                     zoom += 0.1
