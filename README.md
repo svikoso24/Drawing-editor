@@ -12,8 +12,7 @@ Projekt bude postupně rozvíjen během školního roku.
 - kreslení čar (a případně tvarů)
 - výběr barvy
 - mazání plátna
-- jednoduché uživatelské rozhraní
-- uložení obrázku (později)
+- uložení obrázku
 
 ## Použité technologie
 - Python
@@ -28,6 +27,6 @@ Projekt bude postupně rozvíjen během školního roku.
 
 ## Struktura projektu
 - src/ – zdrojové soubory aplikace
-- docs/ – uživatelská dokumentace
+- docs/ – dokumentace
 - requirements.txt – použité Python knihovny
 - README.md – popis projektu
