@@ -57,7 +57,8 @@ def main():
     def clear():
         editor.fill((white))
     def save():
-        pygame.image.save(editor, "drawing.png")
+        name = input("name of the picture: ")
+        pygame.image.save(editor, name+".png")
         print("saved as drawing.png")
     save_btn = Button(30, 30, 100, 40, "Save", save)
     clear_btn = Button(140, 30, 100, 40, "Clear", clear)
