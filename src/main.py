@@ -26,6 +26,7 @@ def main():
     blue = (41,118,227)
     purple = (196,93,240)
     pink = (240,93,193)
+    cyan = (0, 255, 225)
 
     editor_rect = pygame.Rect(0, 91, 1280, height-91)
     editor = pygame.Surface((1280, height-91))
@@ -63,22 +64,44 @@ def main():
     def save():
         name = input("name of the picture: ")
         pygame.image.save(editor, name+".png")
-        print("saved as drawing.png")
-    save_btn = Button(30, 30, 100, 40, "Save", save)
-    clear_btn = Button(140, 30, 100, 40, "Clear", clear)
-    black_btn = Button(260, 30, 40, 40, "", lambda: set_color(black), black)
-    red_btn = Button(310, 30, 40, 40, "", lambda: set_color(red), red)
-    orange_btn = Button(360, 30, 40, 40, "", lambda: set_color(orange), orange)
-    yellow_btn = Button(410, 30, 40, 40, "", lambda: set_color(yellow), yellow)
-    green_btn = Button(460, 30, 40, 40, "", lambda: set_color(green), green)
-    blue_btn = Button(510, 30, 40, 40, "", lambda: set_color(blue), blue)
-    purple_btn = Button(560, 30, 40, 40, "", lambda: set_color(purple), purple)
-    pink_btn = Button(610, 30, 40, 40, "", lambda: set_color(pink), pink)
-
-    buttons = [save_btn, clear_btn]
-    colors = [black_btn, red_btn, orange_btn, yellow_btn, green_btn, blue_btn, purple_btn, pink_btn]
-    drawing = False
+        print("saved as "+name+".png")
     brush_size = 8
+    def size():
+        ...
+    def plus():
+        nonlocal brush_size, size_btn
+        if brush_size >= 30:
+            brush_size = 30
+            return
+        brush_size += 2
+        size_btn.text = str(brush_size)
+    def minus():
+        nonlocal brush_size, size_btn
+        if brush_size <= 2:
+            brush_size = 2
+            return
+        brush_size -= 2
+        size_btn.text = str(brush_size)
+
+    save_btn = Button(30, 25, 100, 40, "Save", save)
+    clear_btn = Button(140, 25, 100, 40, "Clear", clear)
+    black_btn = Button(260, 20, 40, 25, "", lambda: set_color(black), black)
+    white_btn = Button(260, 50, 40, 25, "", lambda: set_color(white), white)
+    red_btn = Button(310, 20, 40, 25, "", lambda: set_color(red), red)
+    orange_btn = Button(310, 50, 40, 25, "", lambda: set_color(orange), orange)
+    yellow_btn = Button(360, 20, 40, 25, "", lambda: set_color(yellow), yellow)
+    green_btn = Button(360, 50, 40, 25, "", lambda: set_color(green), green)
+    blue_btn = Button(410, 20, 40, 25, "", lambda: set_color(blue), blue)
+    purple_btn = Button(410, 50, 40, 25, "", lambda: set_color(purple), purple)
+    pink_btn = Button(460, 20, 40, 25, "", lambda: set_color(pink), pink)
+    cyan_btn = Button(460, 50, 40, 25, "", lambda: set_color(cyan), cyan)
+    size_btn = Button(510, 20, 35, 55, str(brush_size), size)
+    plus_btn = Button(550, 20, 30, 25, "+", plus)
+    minus_btn = Button(550, 50, 30, 25, "-", minus)
+
+    buttons = [save_btn, clear_btn, size_btn, plus_btn, minus_btn]
+    colors = [black_btn, white_btn, red_btn, orange_btn, yellow_btn, green_btn, blue_btn, purple_btn, pink_btn, cyan_btn]
+    drawing = False
 
     running = True
     while running:
