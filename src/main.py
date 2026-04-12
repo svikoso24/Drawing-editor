@@ -171,7 +171,7 @@ def main():
         screen.blit(scaled_editor, (offset_x, offset_y+91))
         
         pygame.display.update()
-        clock.tick(20)
+        clock.tick(2000)
 
     pygame.quit()
     
