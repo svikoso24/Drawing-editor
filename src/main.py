@@ -42,7 +42,10 @@ def main() -> None:
 
     editor_rect = pygame.Rect(0, 91, 1280, height-91)
     editor = pygame.Surface((1280, height-91))
-    editor.fill((255, 255, 255))
+    bg_fill_editor = white
+    editor.fill((bg_fill_editor))
+    undo_stack = []
+    redo_stack = []
 
     # text_color = font.render("Color: ", True, (100,100,100))
 
@@ -74,14 +77,17 @@ def main() -> None:
         nonlocal mouse_color 
         mouse_color = color
         # self.setOpacity(0.7)
+
     def clear() -> None:
         """vymaze cele platno"""
         editor.fill((white))
+        
     def save() -> None:
         """ulozi kresbu jako png obrazek"""
         name = input("name of the picture: ")
         pygame.image.save(editor, name+".png")
         print("saved as "+name+".png")
+
     brush_size = 8
     def size() -> None:
         ...
@@ -102,6 +108,25 @@ def main() -> None:
         brush_size -= 2
         size_btn.text = str(brush_size)
 
+    def eraser() -> None:
+        """guma"""
+        nonlocal mouse_color 
+        mouse_color = bg_fill_editor
+
+    def undo() -> None:
+        """vratit zpatky"""
+        nonlocal editor
+        if undo_stack:
+            redo_stack.append(editor.copy())
+            editor = undo_stack.pop() #posledni stary stav
+    def redo() -> None:
+        """jit dopredu"""
+        nonlocal editor
+        if redo_stack:
+            undo_stack.append(editor.copy())
+            editor = redo_stack.pop() #posledni stary stav
+
+
     save_btn = Button(30, 25, 100, 40, "Save", save)
     clear_btn = Button(140, 25, 100, 40, "Clear", clear)
     black_btn = Button(260, 20, 40, 25, "", lambda: set_color(black), black)
@@ -117,8 +142,11 @@ def main() -> None:
     size_btn = Button(510, 20, 35, 55, str(brush_size), size)
     plus_btn = Button(550, 20, 30, 25, "+", plus)
     minus_btn = Button(550, 50, 30, 25, "-", minus)
+    eraser_btn = Button(590, 25, 100, 40, "Eraser", eraser)
+    undo_btn = Button(700, 20, 50, 25, "<-", undo)
+    redo_btn = Button(700, 50, 50, 25, "->", redo)
 
-    buttons = [save_btn, clear_btn, size_btn, plus_btn, minus_btn]
+    buttons = [save_btn, clear_btn, size_btn, plus_btn, minus_btn, eraser_btn, undo_btn, redo_btn]
     colors = [black_btn, white_btn, red_btn, orange_btn, yellow_btn, green_btn, blue_btn, purple_btn, pink_btn, cyan_btn]
     drawing = False
 
@@ -138,6 +166,8 @@ def main() -> None:
                             color.callback()
                             break
                     if editor_rect.collidepoint(event.pos):
+                        undo_stack.append(editor.copy()) #kopie platna se ulozi
+                        redo_stack.clear() #vymazou se kopie
                         drawing = True
                         last_pos = event.pos # kreslím od posledního bodu k aktuálnímu
             elif event.type == pygame.MOUSEBUTTONUP:
