@@ -81,12 +81,14 @@ def main() -> None:
     def clear() -> None:
         """vymaze cele platno"""
         editor.fill((white))
-        
+
+    typing_name = False
+    filename = ""
     def save() -> None:
-        """ulozi kresbu jako png obrazek"""
-        name = input("name of the picture: ")
-        pygame.image.save(editor, name+".png")
-        print("saved as "+name+".png")
+        """zacne psani nazvu souboru"""
+        nonlocal typing_name, filename
+        typing_name = True
+        filename = ""
 
     brush_size = 8
     def size() -> None:
@@ -199,6 +201,19 @@ def main() -> None:
                 else:
                     zoom -= 0.1
                 zoom = max(0.2, min(zoom, 3)) #limit (0.2x až 3x)
+            elif event.type == pygame.KEYDOWN:
+                if typing_name: 
+                    if event.key == pygame.K_RETURN: #enter
+                        if filename != "":
+                            pygame.image.save(editor, filename + ".png")
+                            print("saved as "+filename+".png")
+                        typing_name = False
+                    elif event.key == pygame.K_BACKSPACE: 
+                        filename = filename[:-1] #smaze posledni znak
+                    elif event.key == pygame.K_ESCAPE:
+                        typing_name = False
+                    else:
+                        filename += event.unicode #znak co uzivatel naspal
 
         mouse_pos = pygame.mouse.get_pos()
         # [0] = left
@@ -219,6 +234,13 @@ def main() -> None:
         scaled_editor = pygame.transform.scale(editor, (scaled_width, scaled_height))
         screen.blit(scaled_editor, (offset_x, offset_y+91))
         
+        if typing_name: #input na psani nazvu souboru
+            pygame.draw.rect(screen, white, (800, 20, 250, 40))
+            pygame.draw.rect(screen, black, (800, 20, 250, 40), 2) #border
+
+            text = font.render(filename, True, black)
+            screen.blit(text, (810, 25))
+
         pygame.display.update()
         clock.tick(2000)
 
