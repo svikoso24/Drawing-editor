@@ -1,8 +1,20 @@
+"""
+Simple raster drawing editor made in pygame.
+
+Features:
+- drawing
+- zoom
+- pan
+- saving images
+- color selection
+"""
+
 import pygame
 # import tkinter as tk
 # import random
 
-def main():
+def main() -> None:
+    """spusti drawing editor"""
     pygame.init()
     pygame.font.init()
 
@@ -42,7 +54,8 @@ def main():
             self.was_pressed = False
             self.color = color
 
-        def draw(self, surface):
+        def draw(self, surface) -> None:
+            """vykresli tlacitko"""
             pygame.draw.rect(surface, self.color, self.rect)
 
             surf_text = font.render(self.text, True, (0,0,0)) 
@@ -50,32 +63,38 @@ def main():
 
             surface.blit(surf_text, rect_text)
 
-        def update(self, mouse_pos):
+        def update(self, mouse_pos) -> bool:
+            """obnovi pozivci mysi"""
             return self.rect.collidepoint(mouse_pos)
         
 
     mouse_color = black
-    def set_color(color):
+    def set_color(color) -> None:
+        """nastavi barvu"""
         nonlocal mouse_color 
         mouse_color = color
         # self.setOpacity(0.7)
-    def clear():
+    def clear() -> None:
+        """vymaze cele platno"""
         editor.fill((white))
-    def save():
+    def save() -> None:
+        """ulozi kresbu jako png obrazek"""
         name = input("name of the picture: ")
         pygame.image.save(editor, name+".png")
         print("saved as "+name+".png")
     brush_size = 8
-    def size():
+    def size() -> None:
         ...
-    def plus():
+    def plus() -> None:
+        """zvetsi tloustku stetce"""
         nonlocal brush_size, size_btn
         if brush_size >= 30:
             brush_size = 30
             return
         brush_size += 2
         size_btn.text = str(brush_size)
-    def minus():
+    def minus() -> None:
+        """zmensi tloustku stetce"""
         nonlocal brush_size, size_btn
         if brush_size <= 2:
             brush_size = 2
