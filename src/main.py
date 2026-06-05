@@ -18,7 +18,7 @@ def main() -> None:
     pygame.init()
     pygame.font.init()
 
-    font = pygame.font.SysFont('Consolas', 30)
+    font = pygame.font.SysFont('Consolas', 25)
 
     zoom = 1.0
     offset_x = 0
@@ -44,6 +44,7 @@ def main() -> None:
     editor = pygame.Surface((1280, height-91))
     bg_fill_editor = white
     editor.fill((bg_fill_editor))
+
     undo_stack = []
     redo_stack = []
 
@@ -80,6 +81,8 @@ def main() -> None:
 
     def clear() -> None:
         """vymaze cele platno"""
+        undo_stack.append(editor.copy())
+        redo_stack.clear()
         editor.fill((white))
 
     typing_name = False
@@ -128,8 +131,24 @@ def main() -> None:
             undo_stack.append(editor.copy())
             editor = redo_stack.pop() #posledni stary stav
 
+    brush_shape = "line"
+    def change_shape(shape) -> None:
+        nonlocal brush_shape
+        brush_shape = shape
+    def draw() -> None:
+        nonlocal brush_shape
+        if brush_shape == "line":
+            pygame.draw.line(editor, mouse_color, (last_x, last_y), (x, y), brush_size)
+        elif brush_shape == "circle":
+            pygame.draw.circle(editor, mouse_color, (last_x, last_y), brush_size)
+        elif brush_shape == "rect":
+            pygame.draw.rect(editor, mouse_color, (last_x, last_y, brush_size, brush_size))
+        elif brush_shape == "polygon":
+            pygame.draw.polygon(editor, mouse_color, [(x, y - brush_size), (x - brush_size, y + brush_size), (x + brush_size, y + brush_size)])
+        # elif brush_shape == "arc":
+        #     pygame.draw.arc(editor, mouse_color, (x, y, brush_size*2, brush_size*2), 0, 3.14, 2)
 
-    save_btn = Button(30, 25, 100, 40, "Save", save)
+    save_btn = Button(30, 25, 100, 40, "Save", save) #from left, from above, width, height
     clear_btn = Button(140, 25, 100, 40, "Clear", clear)
     black_btn = Button(260, 20, 40, 25, "", lambda: set_color(black), black)
     white_btn = Button(260, 50, 40, 25, "", lambda: set_color(white), white)
@@ -147,8 +166,12 @@ def main() -> None:
     eraser_btn = Button(590, 25, 100, 40, "Eraser", eraser)
     undo_btn = Button(700, 20, 50, 25, "<-", undo)
     redo_btn = Button(700, 50, 50, 25, "->", redo)
+    line_btn = Button(760, 15, 130, 30, "line", lambda: change_shape("line"))
+    circle_btn = Button(760, 55, 130, 30, "circle", lambda: change_shape("circle"))
+    rect_btn = Button(900, 15, 130, 30, "rect", lambda: change_shape("rect"))
+    polygon_btn = Button(900, 55, 130, 30, "triangle", lambda: change_shape("polygon"))
 
-    buttons = [save_btn, clear_btn, size_btn, plus_btn, minus_btn, eraser_btn, undo_btn, redo_btn]
+    buttons = [save_btn, clear_btn, size_btn, plus_btn, minus_btn, eraser_btn, undo_btn, redo_btn, line_btn, circle_btn, rect_btn, polygon_btn]
     colors = [black_btn, white_btn, red_btn, orange_btn, yellow_btn, green_btn, blue_btn, purple_btn, pink_btn, cyan_btn]
     drawing = False
 
@@ -186,7 +209,7 @@ def main() -> None:
                     last_x = (last_pos[0] - offset_x) / zoom
                     last_y = (last_pos[1] - offset_y-91) / zoom
                     
-                    pygame.draw.line(editor, mouse_color, (last_x, last_y), (x, y), brush_size)
+                    draw()
                     last_pos = event.pos
                     # pygame.draw.line(editor, mouse_color, last_pos, event.pos, brush_size)
                     # z bodu (last_x, last_y) -- do bodu (x, y)
@@ -205,6 +228,7 @@ def main() -> None:
                 if typing_name: 
                     if event.key == pygame.K_RETURN: #enter
                         if filename != "":
+                            filename = filename.strip()
                             pygame.image.save(editor, filename + ".png")
                             print("saved as "+filename+".png")
                         typing_name = False
