@@ -133,9 +133,11 @@ def main() -> None:
 
     brush_shape = "line"
     def change_shape(shape) -> None:
+        """zmeni tvar stetce"""
         nonlocal brush_shape
         brush_shape = shape
     def draw() -> None:
+        """kresli"""
         nonlocal brush_shape
         if brush_shape == "line":
             pygame.draw.line(editor, mouse_color, (last_x, last_y), (x, y), brush_size)
